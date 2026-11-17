@@ -29,7 +29,7 @@ for (i = 0; i < list.length; i++) {
         // only measure objects larger than 3,000 um^2 (ignore debris)
         // IF YOU SEE LOTS OF ZEROS ON .csv FILE - decrease size=x
         // IF YOU SEE ANYTHING OTHER THAN 1 FOR COUNT ON SINGLE SPHEROID - INCREASE size=x
-        run("Analyze Particles...", "size=3000-Infinity circularity=0.20-1.00 show=Nothing display summarize");
+        run("Analyze Particles...", "size=10000-Infinity circularity=0.20-1.00 show=Nothing display summarize");
         
         close();
     }
