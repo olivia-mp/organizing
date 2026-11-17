@@ -16,8 +16,9 @@ for (i = 0; i < list.length; i++) {
         run("Set Scale...", "distance=1 known=1.24 pixel=1 unit=um");
         
         // convert to 8-bit grayscale and smooth texture noise
+        // IF YOU SEE LOTS OF ZEROS ON .csv FILE - increase sigma=x 
         run("8-bit");
-        run("Gaussian Blur...", "sigma=2");
+        run("Gaussian Blur...", "sigma=2.5");
         
         // auto-threshold darker spheroid against bright background
         setAutoThreshold("Default");
@@ -25,8 +26,10 @@ for (i = 0; i < list.length; i++) {
         run("Convert to Mask");
         run("Fill Holes");
         
-        // Measure objects larger than 3,000 um^2 (roughly >50 um diameter) to ignore debris
-        run("Analyze Particles...", "size=5000-Infinity circularity=0.20-1.00 show=Nothing display summarize");
+        // only measure objects larger than 3,000 um^2 (ignore debris)
+        // IF YOU SEE LOTS OF ZEROS ON .csv FILE - decrease size=x
+        // IF YOU SEE ANYTHING OTHER THAN 1 FOR COUNT ON SINGLE SPHEROID - INCREASE size=x
+        run("Analyze Particles...", "size=3000-Infinity circularity=0.20-1.00 show=Nothing display summarize");
         
         close();
     }
