@@ -1,0 +1,69 @@
+# --- this is all commented out because it is an Rmarkdown doc
+# title: "Graphs for incucyte data"
+# output: html_document
+# date: "2026-10-29"
+# ---
+# 
+# install.packages(c("ggplot2", "tidyr", "Rtools", "dplyr"))
+# 
+# 
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#########################################
+##### Time point graph for Incucyte #####
+#########################################
+# copy and paste from here if you have packages installed
+
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+normalized <- read.delim("clipboard", sep = "\t")  # make sure data is copied 
+
+normalized_long <- pivot_longer(
+  data = normalized,
+  cols = -Elapsed,             
+  names_to = "Metric",         
+  values_to = "Value"          
+)
+
+normalized_long$Metric <- gsub("^X", "", normalized_long$Metric)
+
+normalized_long$Metric <- factor(
+  normalized_long$Metric, 
+ # levels = c("Ct", "25starved", "50starved", "75starved", "100starved")
+  levels = c("Ct", "cisp2.5", "cisp5", "cisp7.5", "cisp10", "cisp12.5", "cisp15", "cisp17.5")
+)
+# ^^ line 35-36 - one needs to be commented out depending on proliferation type
+
+normalized_long$Value <- as.numeric(as.character(normalized_long$Value))
+normalized_long$Elapsed <- as.numeric(as.character(normalized_long$Elapsed))
+
+### for pretty graph ### 
+# commented out only for graphs with lots of variables 
+# including lines 55-57
+
+# burgundy_base <- c("#800020", "#E57890", "#A13D50", "#C77B8A", "#E6BAC2")
+num_variables <- length(unique(normalized_long$Metric))
+# burgundy_colors <- colorRampPalette(burgundy_base)(num_variables)
+
+bigbeautifulgraph <- ggplot(normalized_long, aes(x = Elapsed, y = Value, color = Metric, group = Metric)) +
+  geom_line(linewidth = 1.3) + 
+  geom_point(size = 2.2) +
+  theme_minimal() +
+  # scale_color_manual(
+  # values = burgundy_colors
+  # ) +
+
+  labs(
+    title = "HepG2 Cisplatin Dose Response",   ######## CHANGE YOUR TITLE!!################
+    x = "Elapsed (Hours)",
+    y = "Change in Confluence"     
+  ) +
+   theme(
+    plot.title = element_text(face = "bold", color = "#4A0010"),
+    panel.grid.minor = element_blank() 
+  )
+  print(bigbeautifulgraph)
+```
